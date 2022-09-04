@@ -1,0 +1,31 @@
+# 在项目根目录下放一个 CMkaeLists.txt，它是编译整个项目的入口
+cmake_minimum_required(VERSION 3.20.0)
+
+set(CMAKE_CXX_STANDARD 11)
+# set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_C_STANDARD 11)
+
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+    message("Setting default build type to Release")
+endif()
+
+project(my_project_name VERSION 0.0.1 LANGUAGES C CXX)
+
+# 本项目的头文件路径
+include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/common)
+
+# 声明要构建的 target
+add_subdirectory(./src)
+add_subdirectory(./common)
+
+# 设置各个 target 间的依赖关系：add_dependencies 项目间的依赖关系，即声明项目间的编译顺序
+## main 是 src/ 目录下的 target
+## common 是 commom/ 目录下的 target
+## 这里设置成先生成 common，在生成 main
+add_dependencies(main common main)
+
+# 如果项目下还有其他源文件目录，则在这里进行添加
+#add_subdirectory(./test)
+#add_subdirectory(./example)
